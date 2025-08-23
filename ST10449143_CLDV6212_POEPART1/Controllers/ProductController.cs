@@ -76,7 +76,6 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
             return View(product);
         }
 
-        // GET: ProductController/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -93,7 +92,6 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
             return View(product);
         }
 
-        // POST: ProductController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Product product, IFormFile? imageFile)
@@ -145,7 +143,7 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
             return View(product);
         }
 
-        // POST: ProductController/Delete/5
+        
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
