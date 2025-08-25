@@ -46,7 +46,6 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
             {
                 try
                 {
-                    // Get customer and product details
                     var customer = await _storageService.GetEntityAsync<Customer>("Customer", model.CustomerId);
                     var product = await _storageService.GetEntityAsync<Product>("Product", model.ProductId);
 
@@ -57,7 +56,6 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
                         return View(model);
                     }
 
-                    // Check stock availability
                     if (product.StockAvailable < model.Quantity)
                     {
                         ModelState.AddModelError("Quantity", $"Insufficient stock. Available: {product.StockAvailable}");
@@ -65,27 +63,27 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
                         return View(model);
                     }
 
-                    // Create order
+                    // Ensure OrderDate is UTC
+                    var orderDateUtc = DateTime.SpecifyKind(model.OrderDate, DateTimeKind.Utc);
+
                     var order = new Order
                     {
                         CustomerId = model.CustomerId,
                         Username = customer.Username,
                         ProductId = model.ProductId,
                         ProductName = product.ProductName,
-                        OrderDate = model.OrderDate,
+                        OrderDate = orderDateUtc, // <-- UTC
                         Quantity = model.Quantity,
                         UnitPrice = product.Price,
                         TotalPrice = product.Price * model.Quantity,
-                        Status = "Submitted" // Always starts as Submitted
+                        Status = "Submitted"
                     };
 
                     await _storageService.AddEntityAsync(order);
 
-                    // Update product stock
                     product.StockAvailable -= model.Quantity;
                     await _storageService.UpdateEntityAsync(product);
 
-                    // Send queue message for new order
                     var orderMessage = new
                     {
                         OrderId = order.OrderId,
@@ -94,16 +92,15 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
                         ProductName = product.ProductName,
                         Quantity = order.Quantity,
                         TotalPrice = order.TotalPrice,
-                        OrderDate = order.OrderDate,
+                        OrderDate = order.OrderDate, // UTC
                         Status = order.Status
                     };
 
                     await _storageService.SendMessageAsync("order-notifications", JsonSerializer.Serialize(orderMessage));
 
-                    // Send stock update message
                     var stockMessage = new
                     {
-                        ProductId = product.ProductId, 
+                        ProductId = product.ProductId,
                         ProductName = product.ProductName,
                         PreviousStock = product.StockAvailable + model.Quantity,
                         NewStock = product.StockAvailable,
@@ -125,6 +122,7 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
             await PopulateDropdowns(model);
             return View(model);
         }
+
 
         // GET: OrderController/Details/5
         public async Task<IActionResult> Details(string id)

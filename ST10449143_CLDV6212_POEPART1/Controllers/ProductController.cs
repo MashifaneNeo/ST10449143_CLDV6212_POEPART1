@@ -1,5 +1,4 @@
-﻿// Controllers/ProductController.cs
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ST10449143_CLDV6212_POEPART1.Models;
 using ST10449143_CLDV6212_POEPART1.Services;
 
@@ -9,43 +8,25 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
     {
         private readonly IAzureStorageService _storageService;
         private readonly ILogger<ProductController> _logger;
+
         public ProductController(IAzureStorageService storageService, ILogger<ProductController> logger)
         {
             _storageService = storageService;
             _logger = logger;
         }
+
         public async Task<IActionResult> Index()
         {
             var products = await _storageService.GetAllEntitiesAsync<Product>();
             return View(products);
         }
-        public IActionResult Create()
-        {
-            return View();
-        }
+
+        public IActionResult Create() => View();
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Product product, IFormFile? imageFile)
         {
-            // Manual price parsing to fix binding issue
-            if (Request.Form.TryGetValue("Price", out var priceFormValue))
-            {
-                _logger.LogInformation("Raw price from form: '{PriceValue}'", priceFormValue.ToString);
-
-                if (decimal.TryParse(priceFormValue, out var parsedPrice))
-                {
-                    product.Price = parsedPrice;
-                    _logger.LogInformation("Successfully parsed price: {Price}", parsedPrice);
-                }
-                else
-                {
-                    _logger.LogWarning("Failed to parse price: '{PriceFormValue}'", priceFormValue.ToString());
-                }
-            }
-
-            _logger.LogInformation("Final product price: {Price}", product.Price);
-
             if (ModelState.IsValid)
             {
                 try
@@ -55,11 +36,10 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
                         ModelState.AddModelError("Price", "Price must be greater than zero.");
                         return View(product);
                     }
-                    // Add the product to Azure Table Storage
+
                     if (imageFile != null && imageFile.Length > 0)
                     {
-                        var imageUrl = await _storageService.UploadImageAsync(imageFile, "product-images");
-                        product.ImageUrl = imageUrl;
+                        product.ImageUrl = await _storageService.UploadImageAsync(imageFile, "product-images");
                     }
 
                     await _storageService.AddEntityAsync(product);
@@ -72,22 +52,17 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
                     ModelState.AddModelError("", $"Error creating product: {ex.Message}");
                 }
             }
-
             return View(product);
         }
 
         public async Task<IActionResult> Edit(string id)
         {
             if (string.IsNullOrEmpty(id))
-            {
                 return NotFound();
-            }
 
             var product = await _storageService.GetEntityAsync<Product>("Product", id);
             if (product == null)
-            {
                 return NotFound();
-            }
 
             return View(product);
         }
@@ -96,38 +71,21 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Product product, IFormFile? imageFile)
         {
-            // Manual price parsing for edit too
-            if (Request.Form.TryGetValue("Price", out var priceFormValue))
-            {
-                if (decimal.TryParse(priceFormValue, out var parsedPrice))
-                {
-                    product.Price = parsedPrice;
-                    _logger.LogInformation("Edit: Successfully parsed price: {Price}", parsedPrice);
-                }
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    // Get the original product to preserve ETag
                     var originalProduct = await _storageService.GetEntityAsync<Product>("Product", product.RowKey);
-                    if (originalProduct == null)
-                    {
-                        return NotFound();
-                    }
+                    if (originalProduct == null) return NotFound();
 
-                    // Update properties but keep the original ETag
                     originalProduct.ProductName = product.ProductName;
                     originalProduct.Description = product.Description;
-                    originalProduct.Price = product.Price;
+                    originalProduct.Price = product.Price; // double works with Azure Table
                     originalProduct.StockAvailable = product.StockAvailable;
 
-                    // Upload new image if provided
                     if (imageFile != null && imageFile.Length > 0)
                     {
-                        var imageUrl = await _storageService.UploadImageAsync(imageFile, "product-images");
-                        originalProduct.ImageUrl = imageUrl;
+                        originalProduct.ImageUrl = await _storageService.UploadImageAsync(imageFile, "product-images");
                     }
 
                     await _storageService.UpdateEntityAsync(originalProduct);
@@ -143,7 +101,6 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
             return View(product);
         }
 
-        
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
@@ -160,5 +117,3 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
         }
     }
 }
-    
-

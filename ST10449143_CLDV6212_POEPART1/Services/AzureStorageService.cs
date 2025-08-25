@@ -95,7 +95,7 @@ namespace ST10449143_CLDV6212_POEPART1.Services
             return entities;
         }
 
-        public async Task<T> GetEntityAsync<T>(string partitionKey, string rowKey) where T : class, ITableEntity, new()
+        public async Task<T?> GetEntityAsync<T>(string partitionKey, string rowKey) where T : class, ITableEntity, new()
         {
             var tableName = GetTableName<T>();
             var tableClient = _tableServiceClient.GetTableClient(tableName);

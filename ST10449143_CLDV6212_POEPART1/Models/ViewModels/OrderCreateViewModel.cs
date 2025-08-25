@@ -1,5 +1,4 @@
-﻿// Models/ViewModels/OrderCreateViewModel.cs
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ST10449143_CLDV6212_POEPART1.Models.ViewModels
 {
@@ -21,7 +20,7 @@ namespace ST10449143_CLDV6212_POEPART1.Models.ViewModels
         [Required]
         [Display(Name = "Order Date")]
         [DataType(DataType.Date)]
-        public DateTime OrderDate { get; set; } = DateTime.Today;
+        public DateTime OrderDate { get; set; } = DateTime.SpecifyKind(DateTime.Today, DateTimeKind.Utc);
 
         [Required]
         [Display(Name = "Status")]

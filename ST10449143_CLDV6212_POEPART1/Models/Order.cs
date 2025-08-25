@@ -1,5 +1,4 @@
-﻿// Models/Order.cs
-using Azure;
+﻿using Azure;
 using Azure.Data.Tables;
 using System.ComponentModel.DataAnnotations;
 
@@ -11,15 +10,17 @@ namespace ST10449143_CLDV6212_POEPART1.Models
         public string RowKey { get; set; } = Guid.NewGuid().ToString();
         public DateTimeOffset? Timestamp { get; set; }
         public ETag ETag { get; set; }
+
         [Display(Name = "Order ID")]
         public string OrderId => RowKey;
+
         [Required]
         [Display(Name = "Customer")]
         public string CustomerId { get; set; } = string.Empty;
-        
+
         [Display(Name = "Username")]
         public string Username { get; set; } = string.Empty;
-       
+
         [Required]
         [Display(Name = "Product")]
         public string ProductId { get; set; } = string.Empty;
@@ -30,7 +31,7 @@ namespace ST10449143_CLDV6212_POEPART1.Models
         [Required]
         [Display(Name = "Order Date")]
         [DataType(DataType.Date)]
-        public DateTime OrderDate { get; set; } = DateTime.Today;
+        public DateTime OrderDate { get; set; } = DateTime.UtcNow;
 
         [Required]
         [Display(Name = "Quantity")]
@@ -39,11 +40,11 @@ namespace ST10449143_CLDV6212_POEPART1.Models
 
         [Display(Name = "Unit Price")]
         [DataType(DataType.Currency)]
-        public decimal UnitPrice { get; set; }
+        public double UnitPrice { get; set; }
 
         [Display(Name = "Total Price")]
         [DataType(DataType.Currency)]
-        public decimal TotalPrice { get; set; }
+        public double TotalPrice { get; set; }
 
         [Required]
         [Display(Name = "Status")]
@@ -52,10 +53,9 @@ namespace ST10449143_CLDV6212_POEPART1.Models
 
     public enum OrderStatus
     {
-        Submitted,  // When the order is first created
-        Processing, // When the order is being processed
-        Completed,  // When order is delivered to customer
-        Cancelled   // When the order is cancelled
+        Submitted,
+        Processing,
+        Completed,
+        Cancelled
     }
-
 }
