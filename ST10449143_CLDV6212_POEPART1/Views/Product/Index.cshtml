@@ -11,6 +11,17 @@
     </a>
 </div>
 
+<div class="text-center mb-5 py-4 bg-light rounded shadow-sm">
+    <h5 class="fw-semibold text-dark mb-2">
+        <i class="fas fa-box-open text-success"></i> Explore Our Products
+    </h5>
+    <p class="text-muted fst-italic mb-0">
+        Browse our latest collection of products and discover amazing deals tailored for you.
+    </p>
+</div>
+
+
+
 @if (Model.Any())
 {
     <div class="table-responsive">
@@ -61,6 +72,9 @@
                         </td>
                         <td>
                             <div class="btn-group" role="group">
+                                <a asp-action="Details" asp-route-id="@product.RowKey" class="btn btn-sm btn-outline-info">
+                                    <i class="fas fa-eye"></i>
+                                </a>
                                 <a asp-action="Edit" asp-route-id="@product.RowKey" class="btn btn-sm btn-outline-primary">
                                     <i class="fas fa-edit"></i>
                                 </a>

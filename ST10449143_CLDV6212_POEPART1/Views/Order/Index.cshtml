@@ -11,6 +11,15 @@
     </a>
 </div>
 
+<div class="text-center mb-5 py-4 bg-light rounded shadow-sm">
+    <h5 class="fw-semibold text-dark mb-2">
+        <i class="fas fa-shopping-cart text-warning"></i> Manage Your Orders
+    </h5>
+    <p class="text-muted fst-italic mb-0">
+        Keep track of your orders, review order details and stay updated on your purchases.
+    </p>
+</div>
+
 @if (Model.Any())
 {
     <div class="table-responsive">
@@ -49,40 +58,7 @@
                                 </a>
                                 <a asp-action="Edit" asp-route-id="@order.RowKey" class="btn btn-sm btn-outline-primary" title="Edit">
                                     <i class="fas fa-edit"></i>
-                                </a>
-
-                                <!-- Status Update Dropdown -->
-                                @if (order.Status != "Completed" && order.Status != "Cancelled")
-                                {
-                                    <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-sm btn-outline-warning dropdown-toggle" data-bs-toggle="dropdown" title="Update Status">
-                                            <i class="fas fa-sync-alt"></i>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            @if (order.Status == "Submitted")
-                                            {
-                                                <li>
-                                                    <a class="dropdown-item" href="#" onclick="updateOrderStatus('@order.RowKey', 'Processing')">
-                                                        <i class="fas fa-cog text-info"></i> Mark as Processing
-                                                    </a>
-                                                </li>
-                                            }
-                                            @if (order.Status == "Processing")
-                                            {
-                                                <li>
-                                                    <a class="dropdown-item" href="#" onclick="updateOrderStatus('@order.RowKey', 'Completed')">
-                                                        <i class="fas fa-check text-success"></i> Mark as Completed
-                                                    </a>
-                                                </li>
-                                            }
-                                            <li>
-                                                <a class="dropdown-item" href="#" onclick="updateOrderStatus('@order.RowKey', 'Cancelled')">
-                                                    <i class="fas fa-times text-danger"></i> Cancel Order
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                }
+                                </a>                                
 
                                 <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDelete('@order.RowKey', '@order.OrderId')" title="Delete">
                                     <i class="fas fa-trash"></i>

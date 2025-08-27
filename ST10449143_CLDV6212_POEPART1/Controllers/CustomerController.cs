@@ -76,7 +76,7 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
             return View(customer);
         }
 
-        // GET: Customer/Details/{id}
+        // GET: Customer/Details
         public async Task<IActionResult> Detail(string id)
         {
             if (string.IsNullOrEmpty(id))

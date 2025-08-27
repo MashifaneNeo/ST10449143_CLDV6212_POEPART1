@@ -101,6 +101,20 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
             return View(product);
         }
 
+        // GET: Product/Details
+        public async Task<IActionResult> Details(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return NotFound();
+
+            var product = await _storageService.GetEntityAsync<Product>("Product", id);
+            if (product == null)
+                return NotFound();
+
+            return View(product);
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
