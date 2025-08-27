@@ -11,9 +11,11 @@
         <form asp-action="Edit" method="post">
             <input type="hidden" asp-for="RowKey" />
             <input type="hidden" asp-for="PartitionKey" />
-            <input type="hidden" asp-for="ETag" />
+            <input type="hidden" name="ETag" value="@Model.ETag.ToString()" />
             <input type="hidden" asp-for="Timestamp" />
             <input type="hidden" asp-for="CustomerId" />
+            <input type="hidden" asp-for="Username" />
+            <input type="hidden" asp-for="ProductName" />
             <input type="hidden" asp-for="ProductId" />
             <input type="hidden" asp-for="UnitPrice" />
             <input type="hidden" asp-for="TotalPrice" />

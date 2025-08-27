@@ -1,4 +1,5 @@
 ﻿// Controllers/OrderController.cs
+using Azure;
 using Microsoft.AspNetCore.Mvc;
 using ST10449143_CLDV6212_POEPART1.Models;
 using ST10449143_CLDV6212_POEPART1.Models.ViewModels;
@@ -160,13 +161,19 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
 
         // POST: OrderController/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]        
         public async Task<IActionResult> Edit(Order order)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // Convert ETag string back to ETag type
+                    order.ETag = new ETag(order.ETag.ToString());
+
+                    // Ensure OrderDate is UTC
+                    order.OrderDate = DateTime.SpecifyKind(order.OrderDate, DateTimeKind.Utc);
+
                     await _storageService.UpdateEntityAsync(order);
                     TempData["Success"] = "Order updated successfully!";
                     return RedirectToAction(nameof(Index));
@@ -178,7 +185,6 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
             }
             return View(order);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Delete(string id)

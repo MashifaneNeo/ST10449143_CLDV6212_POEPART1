@@ -1,47 +1,72 @@
-﻿<!-- Views/Home/Index.cshtml -->
-@model ST10449143_CLDV6212_POEPART1.Models.ViewModels.HomeViewModel
+﻿@model ST10449143_CLDV6212_POEPART1.Models.ViewModels.HomeViewModel
 @{
     ViewData["Title"] = "Home";
 }
 
-<div class="text-center mb-5">
-    <h1 class="display-4 text-primary">
-        <i class="fas fa-store"></i> Welcome to ABC Retailers!
-    </h1>
-    <p class="lead">Your one-stop shop for the best deals and latest products</p>
-</div>
+<div class="container">
 
-<!-- Action Buttons -->
-<div class="row mb-5">
-    <div class="col-md-3 mb-3">
-        <a asp-controller="Customer" asp-action="Index" class="btn btn-primary btn-lg w-100 h-100 d-flex flex-column justify-content-center">
-            <i class="fas fa-users fa-2x mb-2"></i>
-            <span>View Customers</span>
-            <small class="text-light">(@Model.CustomerCount total)</small>
-        </a>
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-primary mb-3">
+            <i class="fas fa-store"></i> Welcome to <span class="text-dark">ABC Retailers</span>
+        </h1>
+        <p class="lead text-muted">Your one-stop shop for the best deals and latest products</p>
     </div>
-    <div class="col-md-3 mb-3">
-        <a asp-controller="Product" asp-action="Index" class="btn btn-success btn-lg w-100 h-100 d-flex flex-column justify-content-center">
-            <i class="fas fa-box fa-2x mb-2"></i>
-            <span>View Products</span>
-            <small class="text-light">(@Model.ProductCount total)</small>
-        </a>
+
+    <!-- Dashboard Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Customers</h5>
+                    <p class="text-muted">Total: <strong>@Model.CustomerCount</strong></p>
+                    <a asp-controller="Customer" asp-action="Index" class="btn btn-outline-primary btn-sm w-100">
+                        Manage Customers
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-box fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Products</h5>
+                    <p class="text-muted">Total: <strong>@Model.ProductCount</strong></p>
+                    <a asp-controller="Product" asp-action="Index" class="btn btn-outline-success btn-sm w-100">
+                        Manage Products
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-shopping-cart fa-3x text-warning mb-3"></i>
+                    <h5 class="card-title">Orders</h5>
+                    <p class="text-muted">Total: <strong>@Model.OrderCount</strong></p>
+                    <a asp-controller="Order" asp-action="Index" class="btn btn-outline-warning btn-sm w-100">
+                        Manage Orders
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-upload fa-3x text-info mb-3"></i>
+                    <h5 class="card-title">Uploads</h5>
+                    <p class="text-muted">Payment Proofs</p>
+                    <a asp-controller="Upload" asp-action="Index" class="btn btn-outline-info btn-sm w-100">
+                        Upload Files
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-3 mb-3">
-        <a asp-controller="Order" asp-action="Index" class="btn btn-warning btn-lg w-100 h-100 d-flex flex-column justify-content-center">
-            <i class="fas fa-shopping-cart fa-2x mb-2"></i>
-            <span>View Orders</span>
-            <small class="text-light">(@Model.OrderCount total)</small>
-        </a>
-    </div>
-    <div class="col-md-3 mb-3">
-        <a asp-controller="Upload" asp-action="Index" class="btn btn-info btn-lg w-100 h-100 d-flex flex-column justify-content-center">
-            <i class="fas fa-upload fa-2x mb-2"></i>
-            <span>Upload Files</span>
-            <small class="text-light">(Payment proofs)</small>
-        </a>
-    </div>
-</div>
 
 <!-- Storage Initialization (if needed) -->
 @if (Model.CustomerCount == 0 && Model.ProductCount == 0 && Model.OrderCount == 0)
@@ -57,62 +82,58 @@
     </div>
 }
 
-<!-- Featured Products Section -->
-<div class="row">
-    <div class="col-12">
-        <h2 class="mb-4">
-            <i class="fas fa-star text-warning"></i> Featured Products
-        </h2>
+    <!-- Featured Products Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h2 class="mb-4 text-dark fw-bold">
+                <i class="fas fa-star text-warning"></i> Featured Products
+            </h2>
 
-        @if (Model.FeaturedProducts.Any())
-        {
-            <div class="row justify-content-center">
-                @foreach (var product in Model.FeaturedProducts)
-                {
-                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4">
-                        <div class="card h-100 shadow-sm">
-                            @if (!string.IsNullOrEmpty(product.ImageUrl))
-                            {
-                                <img src="@product.ImageUrl" class="card-img-top" alt="@product.ProductName" style="height: 150px; object-fit: cover;">
-                            }
-                            else
-                            {
-                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
-                                    <i class="fas fa-image fa-3x text-muted"></i>
-                                </div>
-                            }
-                            <div class="card-body d-flex flex-column">
-                                <h6 class="card-title text-center">@product.ProductName</h6>
-                                <p class="card-text small text-muted flex-grow-1 text-center">@(product.Description.Length > 50 ? product.Description.Substring(0, 50) + "..." : product.Description)</p>
-                                <div class="mt-auto text-center">
-                                    <p class="card-text">
-                                        <strong class="text-success">@product.Price.ToString("C")</strong>
+            @if (Model.FeaturedProducts.Any())
+            {
+                <div class="row justify-content-start">
+                    @foreach (var product in Model.FeaturedProducts)
+                    {
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4">
+                            <div class="card h-100 shadow-sm border-0">
+                                @if (!string.IsNullOrEmpty(product.ImageUrl))
+                                {
+                                    <img src="@product.ImageUrl" class="card-img-top" alt="@product.ProductName" style="height: 150px; object-fit: cover;">
+                                }
+                                else
+                                {
+                                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
+                                        <i class="fas fa-image fa-3x text-muted"></i>
+                                    </div>
+                                }
+                                <div class="card-body d-flex flex-column">
+                                    <h6 class="card-title text-center fw-semibold">@product.ProductName</h6>
+                                    <p class="card-text small text-muted flex-grow-1 text-center">
+                                        @(product.Description.Length > 50 ? product.Description.Substring(0, 50) + "..." : product.Description)
                                     </p>
-                                    <small class="text-muted">Stock: @product.StockAvailable</small>
+                                    <div class="mt-auto text-center">
+                                        <p class="card-text">
+                                            <strong class="text-success">@product.Price.ToString("C")</strong>
+                                        </p>
+                                        <small class="text-muted">Stock: @product.StockAvailable</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                }
-            </div>
-        }
-        else
-        {
-            <div class="alert alert-info">
-                <i class="fas fa-info-circle"></i> No products available yet.
-                <a asp-controller="Product" asp-action="Create" class="alert-link">Add your first product</a>!
-            </div>
-        }
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info shadow-sm">
+                    <i class="fas fa-info-circle"></i> No products available yet.
+                    <a asp-controller="Product" asp-action="Create" class="alert-link">Add your first product</a>!
+                </div>
+            }
+        </div>
     </div>
+
 </div>
 
 
 
-
-Privacy.cshtml
-@{
-    ViewData["Title"] = "Privacy Policy";
-}
-<h1>@ViewData["Title"]</h1>
-
-<p>Use this page to detail your site's privacy policy.</p>
