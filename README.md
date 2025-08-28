@@ -15,15 +15,10 @@ Backend: ASP.NET Core 9 / C#
 Azure: Storage Service
 Hosting: Azure Web App
 
- Testing the Application
+Testing the Application
 Navigate to the homepage to view the welcome message and featured products.
 Create an account to explore customer features.
 Use the admin panel to add, edit, or delete products.
 Make order and update their status
 Upload verification of payments/contracts
 Verify privacy policy and other informational pages.
-This project is for educational and demonstration purposes.
-
----
-
-Would you like me to also make a **shorter, simpler README** (just a few lines with features + setup steps) for quick reference, or do you prefer this **detailed professional version**?
