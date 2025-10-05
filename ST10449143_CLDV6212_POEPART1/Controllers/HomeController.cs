@@ -35,6 +35,11 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
             return View();
         }
 
+        public IActionResult Contact()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> InitializeStorage()
         {

@@ -55,12 +55,13 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
             return View(product);
         }
 
-        public async Task<IActionResult> Edit(string id)
+        // GET: Product/Edit
+        public async Task<IActionResult> Edit(string partitionKey, string rowKey)
         {
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(partitionKey) || string.IsNullOrEmpty(rowKey))
                 return NotFound();
 
-            var product = await _storageService.GetEntityAsync<Product>("Product", id);
+            var product = await _storageService.GetEntityAsync<Product>(partitionKey, rowKey);
             if (product == null)
                 return NotFound();
 
@@ -75,12 +76,12 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
             {
                 try
                 {
-                    var originalProduct = await _storageService.GetEntityAsync<Product>("Product", product.RowKey);
+                    var originalProduct = await _storageService.GetEntityAsync<Product>(product.PartitionKey, product.RowKey);
                     if (originalProduct == null) return NotFound();
 
                     originalProduct.ProductName = product.ProductName;
                     originalProduct.Description = product.Description;
-                    originalProduct.Price = product.Price; // double works with Azure Table
+                    originalProduct.Price = product.Price;
                     originalProduct.StockAvailable = product.StockAvailable;
 
                     if (imageFile != null && imageFile.Length > 0)
@@ -102,25 +103,24 @@ namespace ST10449143_CLDV6212_POEPART1.Controllers
         }
 
         // GET: Product/Details
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(string partitionKey, string rowKey)
         {
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(partitionKey) || string.IsNullOrEmpty(rowKey))
                 return NotFound();
 
-            var product = await _storageService.GetEntityAsync<Product>("Product", id);
+            var product = await _storageService.GetEntityAsync<Product>(partitionKey, rowKey);
             if (product == null)
                 return NotFound();
 
             return View(product);
         }
 
-
         [HttpPost]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(string partitionKey, string rowKey)
         {
             try
             {
-                await _storageService.DeleteEntityAsync<Product>("Product", id);
+                await _storageService.DeleteEntityAsync<Product>(partitionKey, rowKey);
                 TempData["Success"] = "Product deleted successfully!";
             }
             catch (Exception ex)
